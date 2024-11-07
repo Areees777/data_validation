@@ -24,3 +24,5 @@ def main():
     spark_wrapper = SparkWrapper("Generics JOB ETL")
     spark_session = spark_wrapper.get_spark_session(SPARK_CONF["conf"], jar_packages)
 
+    return 0
+

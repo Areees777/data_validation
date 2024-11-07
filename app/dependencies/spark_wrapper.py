@@ -23,8 +23,8 @@ class SparkWrapper:
 
         spark = SparkSession.builder \
             .appName(self._app_name) \
+            .master("local") \
             .config(conf=conf) \
-            .enableHiveSupport() \
             .getOrCreate()
 
         if packages is not None:
