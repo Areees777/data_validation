@@ -1,0 +1,119 @@
+docker run -d -p 8090:8080 --name airflow -e LOAD_EX=y -v C:\Users\Lenovo\Desktop\dags:/usr/local/airflow/dags apache/airflow bash -c "airflow db init && airflow webserver"
+
+sudo docker run -d -p 8090:8080 --name airflow -e LOAD_EX=y -v /home/ubuntu/docker-airflow/airflow-dags:/opt/airflow/dags apache/airflow bash -c "airflow db init && airflow webserver"
+
+sudo docker exec -ti airflow bash
+airflow users create --username admin --firstname FIRST_NAME --lastname LAST_NAME --role Admin --email admin@example.org
+airflow scheduler
+
+
+JAVA
+sudo apt install default-jdk
+sudo update-alternatives --config java -> para verificar el path de java
+sudo nano /etc/environment -> para añadir este path a la variable JAVA_HOME
+source /etc/environment
+/usr/lib/jvm/java-11-openjdk-amd64/bin/java
+echo $JAVA_HOME -> Verificar que está asignada.
+/usr/lib/jvm/java-11-openjdk-amd64/bin/java
+
+# Detener el contenedor en ejecución
+sudo docker stop airflow
+
+# Iniciar el contenedor detenido
+sudo docker start airflow
+
+
+
+
+El comando docker-compose down --volumes --remove-orphans ayuda a 
+limpiar contenedores y volúmenes que pueden quedar "huérfanos" o en un estado 
+no deseado, y es una buena práctica usarlo cuando ocurren problemas de red o configuración en Docker Compose.
+
+sed -i 's/^dag_dir_list_interval .*/dag_dir_list_interval = 30/' airflow.cfg
+
+/home/hadoop/hadoop/etc/hadoop
+
+Lanzar el cluster de hdfs
+docker run -it -p 2122:2122 -p 8020:8020 -p 8030:8030 -p 8040:8040 -p 8042:8042 -p  8088:8088 -p 9000:9000 -p 10020:10020 -p 19888:19888 -p 49707:49707 -p 50010:50010 -p 50020:50020 -p 50070:50070 -p 50075:50075 -p 50090:50090 zoltannz/hadoop-ubuntu:2.8.1 /etc/bootstrap.sh -bash
+
+
+cat <<EOF > core-site.xml
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+EOF
+
+wget https://archive.apache.org/dist/hadoop/core/hadoop-2.8.1/hadoop-2.8.1.tar.gz
+tar -xzvf hadoop-2.8.1.tar.gz
+mv dir /usr/local/hadoop
+export HADOOP_HOME=/usr/local/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+source ~/.bashrc
+
+
+SPARK: docker-compose up
+Airflow: docker-compose up
+HDFS: docker-compose up
+
+Para parar el contenedor: docker-compose stop
+Para reiniciar: docker-compose restart
+
+
+
+
+Comprobar conectividad desde Spark a HDFS
+
+from pyspark.sql import SparkSession
+
+# Crear sesión de Spark y configuración para HDFS
+spark = SparkSession.builder \
+    .appName("HDFS Connection Test") \
+    .config("spark.hadoop.fs.defaultFS", "hdfs://hdfs-namenode:8020") \
+    .getOrCreate()
+
+echo '
+from pyspark.sql import SparkSession
+
+# Crear sesión de Spark y configuración para HDFS
+spark = SparkSession.builder \
+    .appName("HDFS Connection Test") \
+    .config("spark.hadoop.fs.defaultFS", "hdfs://hdfs-namenode:8020") \
+    .getOrCreate()
+
+# Probar conectividad listando el contenido de HDFS raíz
+try:
+    hadoop_conf = spark._jsc.hadoopConfiguration()
+    fs = spark._jvm.org.apache.hadoop.fs.FileSystem.get(hadoop_conf)
+    for status in fs.listStatus(spark._jvm.org.apache.hadoop.fs.Path("/")):
+        print(status.getPath())
+    print("Conexión a HDFS exitosa")
+except Exception as e:
+    print("Error al conectar con HDFS:", e)
+
+spark.stop()
+' > hdfs_connection_test.py
+
+
+Para comprobar la conectividad entre spark y airflow
+Instalamos el nc
+apt-get update && apt-get install -y netcat
+
+Esto debe dar succeded
+nc -zv spark_master 7077
+
+
+Para lanzar el submit del fichero spark test.py que está subido en el cluster de spark
+Si no está ese fichero, hay que subirlo previamente al volumen spark apps que está dentro de la carpeta docker-spark
+sudo docker exec da-spark-master spark-submit --master spark://spark-master:7077 /opt/spark/apps/test.py
+
+
+
