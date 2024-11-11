@@ -163,6 +163,7 @@ def main():
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
+        .config("spark-submit", "--jars spark-sql-kafka-0-10_2.12-3.5.3.jar") \
         .getOrCreate()
 
     run(spark)    
