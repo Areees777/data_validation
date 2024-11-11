@@ -66,11 +66,10 @@ def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
     for v in validations:
         field = v["field"]
         if "notEmpty" in v["validations"]:            
-            df_valid = df.filter(F.col(field) != "")
+            df = df.filter(F.col(field) != "")
         elif "notNull" in v["validations"]:
-            df_valid = df.filter(F.col(field).isNotNull())
-        df_invalid = df.subtract(df_valid)
-    return df_valid, df_invalid
+            df = df.filter(F.col(field).isNotNull())
+    return df
 
 def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
     if function == "current_timestamp":
@@ -82,10 +81,11 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         if trnsf["name"] == "validation":
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
-            df_valid, df_invalid = apply_validations(df, validations)
+            df_valid = apply_validations(df, validations)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 add_fields(df_valid, field["name"], field["function"])
+        df_invalid = df.subtract(df_valid)
     return df_valid, df_invalid
 
 def run(spark: SparkSession) -> None:
