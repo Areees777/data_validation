@@ -165,8 +165,10 @@ def main():
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .config("spark.jars", "/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.3.jar") \
         .getOrCreate()
+    
+    print(spark.conf.get("spark.jars"))
 
-    run(spark)    
+    # run(spark) 
 
 if __name__ == "__main__":
     main()
