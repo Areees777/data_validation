@@ -79,7 +79,7 @@ def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
 def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict]) -> None:
     for trnsf in transformations:
         if trnsf["name"] == "validation":
-            logging.info(f"Starting with {trnsf["name"]} step...")
+            logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df = apply_validations(df, validations)
         elif trnsf["name"] == "ok_with_date":
