@@ -144,28 +144,11 @@ def run(spark: SparkSession) -> None:
 
 def main():
 
-    # packages = [
-    #     "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.9.0/kafka-clients-3.9.0.jar",
-    #     "https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.5.0/spark-sql-kafka-0-10_2.12-3.5.0.jar"
-    # ]
-
-    packages = [
-        "/opt/bitnami/spark/jars/kafka-clients-3.9.0.jar",
-        "/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar"
-    ]
-
-    # spark = SparkSession.builder \
-    #     .appName("Input data") \
-    #     .config("spark.jars.packages", "/opt/bitnami/spark/jars/kafka-clients-3.9.0.jar, /opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar") \
-    #     .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-    #     .getOrCreate()
-
     spark = SparkSession.builder \
         .appName("Input data") \
+        .config("spark.jars", "/opt/bitnami/spark/jars/kafka-clients-3.9.0.jar, /opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar") \
+        .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .getOrCreate()
-
-    for package in packages:
-        spark.sparkContext.addPyFile(package)
 
     run(spark)    
 
