@@ -8,7 +8,7 @@ PROGRAM_METADATA = {
             "name": "prueba-acceso",
             "sources": [{
                     "name": "person_inputs",
-                    "path": "/data/input/events/person/*",
+                    "path": "/data/input/events/person/",
                     "format": "JSONL"
                 }
             ],
