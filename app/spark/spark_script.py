@@ -107,8 +107,8 @@ def run(spark: SparkSession) -> None:
             df_valid.printSchema()
             df_invalid.printSchema()
 
-            print(f"Count = {df_valid.count()}")
-            print(f"Count = {df_invalid.count()}")
+            print(f"Count valid = {df_valid.count()}")
+            print(f"Count invalid = {df_invalid.count()}")
     
     logging.info("Finished data validation")
 
