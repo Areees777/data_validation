@@ -108,7 +108,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             file_save_mode = sink["saveMode"]
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, file_name])
-                save_non_valid_records(df_valid, file_path, file_format, file_save_mode)
+                save_non_valid_records(df_invalid, file_path, file_format, file_save_mode)
                 
 
     return df_valid, df_invalid
