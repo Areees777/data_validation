@@ -5,7 +5,7 @@ def main():
         .appName("Input data") \
         .getOrCreate()
 
-    file_path = "http://hadoop:9000/data/input.json"
+    file_path = "http://hadoop:50070/data/input.json"
     df = spark.read.parquet(file_path)
     print(f"Count = {df.count()}")
 
