@@ -101,7 +101,7 @@ def run(spark: SparkSession) -> None:
             df = spark.read \
                 .format("json") \
                 .load(full_file_path)
-            sinks = flow(sinks)
+            sinks = flow["sinks"]
             transformations = flow["transformations"]
             data_validation(df, transformations, sinks)
     
