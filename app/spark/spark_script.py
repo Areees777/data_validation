@@ -81,20 +81,23 @@ def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
 def write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
     try:
         df.write \
-            .format(file_format) \
-            .mode(file_save_mode.lower()) \
-            .save(file_path)
+        .format(file_format) \
+        .mode(file_save_mode.lower()) \
+        .save(file_path)
         logging.info(f"Data written to {file_path} in {file_format} format")
     except IOError as e:
         logging.error(f"Error writing to HDFS {file_path}: {str(e)}")
 
 def write_to_kafka(df: DataFrame, topic: str) -> None:
     try:
-        df.write \
+        df.writeStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_URL) \
         .option("topic", topic) \
-        .save()
+        .option("checkpointLocation", "/tmp/kafka_checkpoint") \
+        .start() \
+        .awaitTermination()
+            
         logging.info(f"Data written to Kafka topic {topic}")
     except IOError as e: 
         logging.error(f"Error writing to Kafka topic {topic}: {str(e)}")
