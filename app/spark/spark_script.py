@@ -144,9 +144,17 @@ def run(spark: SparkSession) -> None:
 
 def main():
 
+    jar_packages = ','.join([
+        'spark-sql-kafka-0-10_2.12-3.3.0.jar, kafka-clients-3.7.0.jar',
+        'commons-pool2-2.12.0.jar',
+        'spark-token-provider-kafka-0-10_2.12-3.3.0.jar',
+        'spark-streaming-kafka-0-10-assembly_2.12-3.3.0.jar'
+    ])
+
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
+        .config("spark.jars", jar_packages) \
         .getOrCreate()
 
     run(spark)    
