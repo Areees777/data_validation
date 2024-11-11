@@ -85,9 +85,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 add_fields(df, field["name"], field["function"])
-    df.printSchema()
-    print(f"Count = {df.count()}")
-    return 0
+    return df
 
 def run(spark: SparkSession) -> None:
     logging.info("Starting data validation")
@@ -103,7 +101,9 @@ def run(spark: SparkSession) -> None:
                 .load(full_file_path)
             sinks = flow["sinks"]
             transformations = flow["transformations"]
-            data_validation(df, transformations, sinks)
+            df = data_validation(df, transformations, sinks)
+            df.printSchema()
+            df.show()
     
     logging.info("Finished data validation")
 
