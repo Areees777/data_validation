@@ -166,9 +166,9 @@ def main():
         .config("spark.jars", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar") \
         .getOrCreate()
     
-    print(spark.conf.get("spark.jars"))
+    # print(spark.conf.get("spark.jars"))
 
-    # run(spark) 
+    run(spark)
 
 if __name__ == "__main__":
     main()
