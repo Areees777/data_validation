@@ -82,10 +82,10 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df_valid = apply_validations(df, validations)
+            df_invalid = df.subtract(df_valid)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
-                df_valid = add_fields(df_valid, field["name"], field["function"])
-        df_invalid = df.subtract(df_valid)
+                df_valid = add_fields(df_valid, field["name"], field["function"])        
     return df_valid, df_invalid
 
 def run(spark: SparkSession) -> None:
