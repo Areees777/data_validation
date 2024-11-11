@@ -67,6 +67,7 @@ def run(spark: SparkSession) -> None:
             file_path = source["path"]
             file_format = source["format"].lower()
             full_file_path = "".join([HDFS_URL, file_path])
+            print(full_file_path)
             df = spark.read \
                 .format("json") \
                 .load(full_file_path)
