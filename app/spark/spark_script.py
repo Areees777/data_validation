@@ -67,10 +67,9 @@ def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
         field = v["field"]
         if "notEmpty" in v["validations"]:            
             df_valid = df.filter(F.col(field) != "")
-            df_invalid = df.filter(F.col(field) == "")
         elif "notNull" in v["validations"]:
             df_valid = df.filter(F.col(field).isNotNull())
-            df_invalid = df.filter(F.col(field).isNull())        
+        df_invalid = df.subtract(df_valid)
     return df_valid, df_invalid
 
 def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
