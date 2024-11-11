@@ -8,7 +8,7 @@ PROGRAM_METADATA = {
             "name": "prueba-acceso",
             "sources": [{
                     "name": "person_inputs",
-                    "path": "/data/input/events/person/",
+                    "path": "/data/input/events/person/*",
                     "format": "JSONL"
                 }
             ],
@@ -73,8 +73,7 @@ def run(spark: SparkSession) -> None:
                 .load(full_file_path)
             print(f"Count = {df.count()}")
 
-def main():
-    
+def main():    
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
