@@ -23,8 +23,6 @@ sudo docker stop airflow
 sudo docker start airflow
 
 
-
-
 El comando docker-compose down --volumes --remove-orphans ayuda a 
 limpiar contenedores y volúmenes que pueden quedar "huérfanos" o en un estado 
 no deseado, y es una buena práctica usarlo cuando ocurren problemas de red o configuración en Docker Compose.
