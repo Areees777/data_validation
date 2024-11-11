@@ -163,7 +163,7 @@ def main():
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars", "/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.3.jar") \
+        .config("spark.jars", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar") \
         .getOrCreate()
     
     print(spark.conf.get("spark.jars"))
