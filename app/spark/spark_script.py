@@ -115,7 +115,8 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
     
     for sink in sinks:
         if sink["input"] == "ok_with_date":
-            print("Escribir en Kafka")
+            for topic in sink["topics"]:
+                write_to_kafka(df_valid, topic)
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, sink["name"]])
