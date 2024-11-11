@@ -114,4 +114,8 @@ Si no está ese fichero, hay que subirlo previamente al volumen spark apps que e
 sudo docker exec da-spark-master spark-submit --master spark://spark-master:7077 /opt/spark/apps/test.py
 
 
+KAFKA
+El fichero kafka-topics.sh se encuentra en /opt/bitnami/kafka/bin/kafka-topics.sh
+Para crear el topic kafka-topics.sh --create --topic person --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
+
 

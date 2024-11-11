@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession, DataFrame, functions as F
 
 
 HDFS_URL = "hdfs://hadoop:9000"
-KAFKA_URL = "localhost:9092"
+KAFKA_URL = "kafka:9092"
 
 PROGRAM_METADATA = {
     "dataflows": [{
@@ -78,7 +78,7 @@ def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
         df = df.withColumn(field_name, F.current_timestamp())
         return df
     
-def write_to_kafka(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
+def write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
     try:
         df.write \
             .format(file_format) \
@@ -88,7 +88,7 @@ def write_to_kafka(df: DataFrame, file_path: str, file_format: str, file_save_mo
     except IOError as e:
         logging.error(f"Error writing to HDFS {file_path}: {str(e)}")
 
-def write_to_hdfs(df: DataFrame, topic: str) -> None:
+def write_to_kafka(df: DataFrame, topic: str) -> None:
     try:
         df.write \
         .format("kafka") \
@@ -106,7 +106,9 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df_valid = apply_validations(df, validations)
-            df_invalid = df.filter(~df_valid.isNotNull())
+            # This could be replace by left_anti join by any PK, but 
+            # we don't have on this data sample.
+            df_invalid = df.subtract(df_valid)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 df_valid = add_fields(df_valid, field["name"], field["function"])
@@ -135,7 +137,7 @@ def run(spark: SparkSession) -> None:
                 .load(full_file_path)
             sinks = flow["sinks"]
             transformations = flow["transformations"]
-            df_valid, df_invalid = data_validation(df, transformations, sinks)    
+            data_validation(df, transformations, sinks)
     logging.info("Finished data validation")
 
 
