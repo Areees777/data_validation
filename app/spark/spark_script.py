@@ -90,14 +90,11 @@ def write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mod
 
 def write_to_kafka(df: DataFrame, topic: str) -> None:
     try:
-        df.writeStream \
+        df.write \
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_URL) \
         .option("topic", topic) \
-        .option("checkpointLocation", "/tmp/kafka_checkpoint") \
-        .start() \
-        .awaitTermination()
-            
+        .save()            
         logging.info(f"Data written to Kafka topic {topic}")
     except IOError as e: 
         logging.error(f"Error writing to Kafka topic {topic}: {str(e)}")
