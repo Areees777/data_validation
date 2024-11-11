@@ -7,10 +7,6 @@ def main():
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", hdfs_url) \
         .getOrCreate()
-    
-    schema = StructField[(
-
-    )]
 
     file_path = "hdfs://hadoop:9000/data/input.jsonl"
     df = spark.read \
@@ -18,6 +14,7 @@ def main():
         .load(file_path)
     
     print(f"Count = {df.count()}")
+    df.printSchema()
 
 if __name__ == "__main__":
     main()
