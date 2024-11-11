@@ -53,7 +53,7 @@ PROGRAM_METADATA = {
                     "input": "validation_ko",
                     "name": "raw-ko",
                     "paths": [
-                        "/data/output/discards/person"
+                        "/data/output/discards/person/"
                     ],
                     "format": "JSON",
                     "saveMode": "OVERWRITE"
@@ -127,18 +127,7 @@ def run(spark: SparkSession) -> None:
                 .load(full_file_path)
             sinks = flow["sinks"]
             transformations = flow["transformations"]
-            df_valid, df_invalid = data_validation(df, transformations, sinks)            
-
-            print("Valid records ...")
-            df_valid.show()
-            print(f"Count valid = {df_valid.count()}")
-            df_valid.printSchema()
-
-            print("Invalid records ...")
-            df_invalid.show()
-            print(f"Count invalid = {df_invalid.count()}")
-            df_invalid.printSchema()
-    
+            df_valid, df_invalid = data_validation(df, transformations, sinks)    
     logging.info("Finished data validation")
 
 
