@@ -102,15 +102,17 @@ def run(spark: SparkSession) -> None:
                 .load(full_file_path)
             sinks = flow["sinks"]
             transformations = flow["transformations"]
-            df_valid, df_invalid = data_validation(df, transformations, sinks)
-            df_valid.printSchema()
-            df_invalid.printSchema()
+            df_valid, df_invalid = data_validation(df, transformations, sinks)            
 
-            print(f"Count valid = {df_valid.count()}")
-            print(f"Count invalid = {df_invalid.count()}")
-
+            print("Valid records ...")
             df_valid.show()
+            print(f"Count valid = {df_valid.count()}")
+            df_valid.printSchema()
+
+            print("Invalid records ...")
             df_invalid.show()
+            print(f"Count invalid = {df_invalid.count()}")
+            df_invalid.printSchema()
     
     logging.info("Finished data validation")
 
