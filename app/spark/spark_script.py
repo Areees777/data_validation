@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession, DataFrame, functions as F
 
 
 HDFS_URL = "hdfs://hadoop:9000"
+KAFKA_URL = "localhost:9092"
 
 PROGRAM_METADATA = {
     "dataflows": [{
@@ -86,6 +87,17 @@ def save_non_valid_records(df: DataFrame, file_path: str, file_format: str, file
         logging.info(f"Able to write the file into {file_path}")
     except IOError as e:
         logging.error(f"Not able to write the file due to {e}")
+
+def save_valid_records(df: DataFrame, topic: str) -> None:
+    try:
+        df.write \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", KAFKA_URL) \
+        .option("topic", topic) \
+        .save()
+        logging.info(f"Able to write the records into Kafka topic {topic}")
+    except IOError as e: 
+        logging.error(f"Not able to write the records into Kafka topic {topic} due to {e}")
 
 
 def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict]) -> None:
