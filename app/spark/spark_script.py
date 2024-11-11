@@ -1,5 +1,7 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField
+import logging
+from typing import List
+from pyspark.sql import SparkSession, DataFrame, functions as F
+
 
 HDFS_URL = "hdfs://hadoop:9000"
 
@@ -60,28 +62,58 @@ PROGRAM_METADATA = {
     ]
 }
 
+def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
+    for v in validations:
+        field = v["field"]
+        if "notEmpty" in v["validations"]:            
+            df = df.filter(F.col(field) != "")
+        elif "notNull" in v["validations"]:
+            df = df.filter(F.col(field).isNotNull())
+    return df
+
+def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
+    if function == "current_timestamp":
+        df = df.withColumn(field_name, F.current_timestamp())
+        return df
+
+def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict]) -> None:
+    for trnsf in transformations:
+        if trnsf["name"] == "validation":
+            logging.info(f"Starting with {trnsf["name"]} step...")
+            validations = trnsf["params"]["validations"]
+            df = apply_validations(df, validations)
+        elif trnsf["name"] == "ok_with_date":
+            for field in trnsf["params"]["addFields"]:
+                add_fields(df, field["name"], field["function"])
+    df.printSchema()
+    print(f"Count = {df.count()}")
+    return 0
+
 def run(spark: SparkSession) -> None:
+    logging.info("Starting data validation")
+
     for flow in PROGRAM_METADATA["dataflows"]:
         flow_name = flow["name"]
         for source in flow["sources"]:
             file_path = source["path"]
-            file_format = source["format"].lower()
             full_file_path = "".join([HDFS_URL, file_path])
             print(full_file_path)
             df = spark.read \
                 .format("json") \
                 .load(full_file_path)
-            print(f"Count = {df.count()}")
+            sinks = flow(sinks)
+            transformations = flow["transformations"]
+            data_validation(df, transformations, sinks)
+    
+    logging.info("Finished data validation")
 
-def main():    
+
+def main():
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .getOrCreate()
-
-    run(spark)  
-    
-    
+        .getOrCreate()    
+    run(spark)    
 
 if __name__ == "__main__":
     main()
