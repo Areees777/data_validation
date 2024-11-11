@@ -78,26 +78,26 @@ def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
         df = df.withColumn(field_name, F.current_timestamp())
         return df
     
-def save_non_valid_records(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
+def write_to_kafka(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
     try:
         df.write \
             .format(file_format) \
             .mode(file_save_mode.lower()) \
             .save(file_path)
-        logging.info(f"Able to write the file into {file_path}")
+        logging.info(f"Data written to {file_path} in {file_format} format")
     except IOError as e:
-        logging.error(f"Not able to write the file due to {e}")
+        logging.error(f"Error writing to HDFS {file_path}: {str(e)}")
 
-def save_valid_records(df: DataFrame, topic: str) -> None:
+def write_to_hdfs(df: DataFrame, topic: str) -> None:
     try:
         df.write \
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_URL) \
         .option("topic", topic) \
         .save()
-        logging.info(f"Able to write the records into Kafka topic {topic}")
+        logging.info(f"Data written to Kafka topic {topic}")
     except IOError as e: 
-        logging.error(f"Not able to write the records into Kafka topic {topic} due to {e}")
+        logging.error(f"Error writing to Kafka topic {topic}: {str(e)}")
 
 
 def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict]) -> None:
@@ -106,7 +106,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df_valid = apply_validations(df, validations)
-            df_invalid = df.subtract(df_valid)
+            df_invalid = df.filter(~df_valid.isNotNull())
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 df_valid = add_fields(df_valid, field["name"], field["function"])
@@ -115,13 +115,9 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         if sink["input"] == "ok_with_date":
             print("Escribir en Kafka")
         elif sink["input"] == "validation_ko":
-            file_name = sink["name"]
-            file_format = sink["format"]
-            file_save_mode = sink["saveMode"]
             for path in sink["paths"]:
-                file_path = "".join([HDFS_URL, path, file_name])
-                save_non_valid_records(df_invalid, file_path, file_format, file_save_mode)
-                
+                file_path = "".join([HDFS_URL, path, sink["name"]])
+                write_to_hdfs(df_invalid, file_path, sink["format"], sink["saveMode"])                
 
     return df_valid, df_invalid
 
