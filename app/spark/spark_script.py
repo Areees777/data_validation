@@ -69,7 +69,7 @@ def run(spark: SparkSession) -> None:
             full_file_path = "".join([HDFS_URL, file_path])
             print(full_file_path)
             df = spark.read \
-                .format("jsonl") \
+                .format("json") \
                 .load(full_file_path)
             print(f"Count = {df.count()}")
 
