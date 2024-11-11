@@ -84,7 +84,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             df_valid = apply_validations(df, validations)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
-                add_fields(df_valid, field["name"], field["function"])
+                df_valid = add_fields(df_valid, field["name"], field["function"])
         df_invalid = df.subtract(df_valid)
     return df_valid, df_invalid
 
