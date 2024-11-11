@@ -7,7 +7,7 @@ def main():
         .config("spark.hadoop.fs.defaultFS", hdfs_url) \
         .getOrCreate()
 
-    file_path = "hdfs://hadoop:9000/data/input.json"
+    file_path = "hdfs://hadoop:9000/data/input.jsonl"
     df = spark.read \
         .format("json") \
         .option("multiLine", "true") \
