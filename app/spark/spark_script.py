@@ -158,10 +158,11 @@ def main():
         '/opt/bitnami/spark/jars/spark-streaming-kafka-0-10-assembly_2.12-3.3.0.jar'
     ])
 
+    # .config("spark.jars", jar_packages_local_path) \
+
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars", jar_packages_local_path) \
         .getOrCreate()
 
     run(spark)    
