@@ -58,7 +58,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 source ~/.bashrc
 
 
-SPARK: docker-compose up
+SPARK: docker-compose up / docker-compose up --build en caso que queramos recrear la imagen
 Airflow: docker-compose up
 HDFS: docker-compose up
 

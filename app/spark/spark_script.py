@@ -145,7 +145,8 @@ def run(spark: SparkSession) -> None:
 def main():
     spark = SparkSession.builder \
         .appName("Input data") \
-        .config("spark.jars", "/opt/spark/jars/spark-sql-kafka-0-10_2.12-3.5.3.jar") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1") \
+        .config("spark.jars.packages", "org.apache.kafka:kafka-clients:3.9.0") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .getOrCreate()    
     run(spark)    
