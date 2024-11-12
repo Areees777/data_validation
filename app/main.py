@@ -67,26 +67,11 @@ def run(spark: SparkSession) -> None:
             transformations = flow["transformations"]
             data_validation(df, transformations, sinks)
     logging.info("Finished data validation")
-    
+
 
 def main():
-    """Function that executes the ETL process on every layer.
-    It reads the arguments and takes the environment to be used later
-    in the configuration dictionaries. Based on this variable will
-    take the corresponding configurations."""
-    ap = argparse.ArgumentParser()
-    ap.add_argument('-i', '--env')
-
-    args = ap.parse_args()
-    environment = args.env
-
-    jar_packages = []
-
-    for package in SPARK_JAR_PACKAGES:
-        jar_packages.append(package)
-
-    spark_wrapper = SparkWrapper("Generics JOB ETL")
-    spark_session = spark_wrapper.get_spark_session(SPARK_CONF["conf"], jar_packages)
+    spark_wrapper = SparkWrapper("Data validation")
+    spark_session = spark_wrapper.get_spark_session(SPARK_CONF["conf"], SPARK_JAR_PACKAGES)
 
     run(spark_session)
 
