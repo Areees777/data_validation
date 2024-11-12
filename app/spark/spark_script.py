@@ -74,11 +74,11 @@ def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
         errors = []
 
         if "notEmpty" in v["validations"]:
-            error_condition = F.when(F.col(field) == "", F.lit({"field": field, "error": "Error: campo vacío"}))
+            error_condition = F.when(F.col(field) == "", F.struct(F.lit(field).alias("field"), F.lit("Error: empty field").alias("error")))
             errors.append(error_condition)
 
         if "notNull" in v["validations"]:
-            error_condition = F.when(F.col(field).isNull(), F.lit({"field": field, "error": "Error: campo nulo"}))
+            error_condition = F.when(F.col(field).isNull(), F.struct(F.lit(field).alias("field"), F.lit("Error: null field").alias("error")))
             errors.append(error_condition)
 
         # Agregamos los errores a arraycoderrorbyfield si existen
