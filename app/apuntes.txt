@@ -23,8 +23,8 @@ sudo docker stop airflow
 sudo docker start airflow
 
 
-El comando docker-compose down --volumes --remove-orphans ayuda a 
-limpiar contenedores y volúmenes que pueden quedar "huérfanos" o en un estado 
+El comando docker-compose down --volumes --remove-orphans ayuda a
+limpiar contenedores y volúmenes que pueden quedar "huérfanos" o en un estado
 no deseado, y es una buena práctica usarlo cuando ocurren problemas de red o configuración en Docker Compose.
 
 sed -i 's/^dag_dir_list_interval .*/dag_dir_list_interval = 30/' airflow.cfg
@@ -118,11 +118,9 @@ KAFKA
 El fichero kafka-topics.sh se encuentra en /opt/bitnami/kafka/bin/kafka-topics.sh
 Para crear el topic kafka-topics.sh --create --topic person --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
 
-Para hacer ls dentro de un docker: 
+Para hacer ls dentro de un docker:
 sudo docker exec -it be2d22b72096 ls /opt/bitnami/spark/jars | grep -i "kafka"
 
 Para subir un archivo local a un path del contenedor
 sudo docker cp spark-sql-kafka-0-10_2.12-3.5.0.jar be2d22b72096:/opt/bitnami/spark/jars
 sudo docker cp kafka-clients-3.9.0.jar be2d22b72096:/opt/bitnami/spark/jars
-
-

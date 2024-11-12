@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sdg-prueba-tecnica"
-version = "0.1.0"                       
+version = "0.1.0"
 description = "Prueba tecnica SDG"
 authors = ["Ares <ares.argiles@gmail.com>"]
 packages = [
