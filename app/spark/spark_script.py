@@ -87,7 +87,7 @@ def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
                 "arraycoderrorbyfield",
                 F.when(
                     error.isNotNull(),
-                    F.expr("array_union(arraycoderrorbyfield, array({}))".format(error))
+                    F.array_union(F.col("arraycoderrorbyfield"), F.array(error))
                 ).otherwise(F.col("arraycoderrorbyfield"))
             )
     # Dividimos en registros válidos e inválidos según si arraycoderrorbyfield está vacío o no
