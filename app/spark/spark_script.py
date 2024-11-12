@@ -142,6 +142,8 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df_valid, df_invalid = apply_validations(df, validations)
+            df_valid.show(truncate=False)
+            df_invalid.show(truncate=False)
             # This could be replace by left_anti join by any PK, but
             # we don't have on this data sample.
             # df_invalid = df.subtract(df_valid)
