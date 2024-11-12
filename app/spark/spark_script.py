@@ -64,15 +64,46 @@ PROGRAM_METADATA = {
     ]
 }
 
-
 def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
+    # Inicializamos la columna arraycoderrorbyfield como un array vacío
+    df = df.withColumn("arraycoderrorbyfield", F.array())
+
+    # Aplicamos cada validación y agregamos el código de error cuando falle
     for v in validations:
         field = v["field"]
+        errors = []
+
         if "notEmpty" in v["validations"]:
-            df = df.filter(F.col(field) != "")
-        elif "notNull" in v["validations"]:
-            df = df.filter(F.col(field).isNotNull())
-    return df
+            error_condition = F.when(F.col(field) == "", F.lit({"field": field, "error": "Error: campo vacío"}))
+            errors.append(error_condition)
+
+        if "notNull" in v["validations"]:
+            error_condition = F.when(F.col(field).isNull(), F.lit({"field": field, "error": "Error: campo nulo"}))
+            errors.append(error_condition)
+
+        # Agregamos los errores a arraycoderrorbyfield si existen
+        for error in errors:
+            df = df.withColumn(
+                "arraycoderrorbyfield",
+                F.when(error.isNotNull(), F.expr("array_union(arraycoderrorbyfield, array(error))"))
+                .otherwise(F.col("arraycoderrorbyfield"))
+            )
+
+    # Dividimos en registros válidos e inválidos según si arraycoderrorbyfield está vacío o no
+    df_valid = df.filter(F.size(F.col("arraycoderrorbyfield")) == 0).drop("arraycoderrorbyfield")
+    df_invalid = df.filter(F.size(F.col("arraycoderrorbyfield")) > 0)
+
+    return df_valid, df_invalid
+
+
+# def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
+#     for v in validations:
+#         field = v["field"]
+#         if "notEmpty" in v["validations"]:
+#             df = df.filter(F.col(field) != "")
+#         elif "notNull" in v["validations"]:
+#             df = df.filter(F.col(field).isNotNull())
+#     return df
 
 
 def add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame:
@@ -109,10 +140,10 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         if trnsf["name"] == "validation":
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
-            df_valid = apply_validations(df, validations)
+            df_valid, df_invalid = apply_validations(df, validations)
             # This could be replace by left_anti join by any PK, but
             # we don't have on this data sample.
-            df_invalid = df.subtract(df_valid)
+            # df_invalid = df.subtract(df_valid)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 df_valid = add_fields(df_valid, field["name"], field["function"])
