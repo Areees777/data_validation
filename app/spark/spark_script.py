@@ -163,12 +163,27 @@ def main():
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar") \
+        .config("spark.jars", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.3.0.jar") \
         .getOrCreate()
+    
+    data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
+    columns = ["name", "value"]
+
+    df = spark.createDataFrame(data, columns)
+
+    KAFKA_URL = "kafka:9092"
+    TOPIC = "person"
+
+    df.write \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", KAFKA_URL) \
+        .option("topic", TOPIC) \
+        .save()
+
     
     # print(spark.conf.get("spark.jars"))
 
-    run(spark)
+    # run(spark)
 
 if __name__ == "__main__":
     main()
