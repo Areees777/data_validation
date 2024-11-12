@@ -166,7 +166,7 @@ def main():
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars.packages", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar") \
+        .config("spark.jars.packages", "hdfs://hadoop:8082/jars/spark-streaming-kafka-0-10_2.13-3.3.0.jar") \
         .getOrCreate()
     
     data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
