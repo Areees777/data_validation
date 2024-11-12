@@ -3,6 +3,19 @@ from pyspark.sql import DataFrame
 
 
 def write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mode: str) -> None:
+    """
+    Function to write a dataframe into hdfs
+    Parameters:
+    ----------
+    df: DataFrame
+        Input dataframe
+    file_path: str
+        File path where the data is gonna be saved
+    file_format: str
+        Desired file format
+    file_save_mode: str
+        Write mode
+    """
     try:
         df.write \
             .format(file_format) \
@@ -14,6 +27,15 @@ def write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mod
 
 
 def write_to_kafka(df: DataFrame, topic: str, kafka_url: str) -> None:
+    """
+    Function to write a dataframe into kafka topic
+    Parameters:
+    ----------
+    df: DataFrame
+        Input dataframe
+    topic: str
+        Target topic where the data is gonna be ingested
+    """
     try:
         df.write \
             .format("kafka") \
