@@ -161,11 +161,12 @@ def main():
     # .config("spark.jars", "spark-sql-kafka-0-10_2.12-3.5.3.jar") \
     # hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.3.0.jar
     # org.apache.spark:spark-sql-kafka-0-10_2.13:3.3.3
+    # org.apache.spark:spark-streaming-kafka-0-10_2.13:3.3.0
 
     spark = SparkSession.builder \
         .appName("Input data") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars.packages", "org.apache.spark:spark-streaming-kafka-0-10_2.13:3.3.0") \
+        .config("spark.jars.packages", "hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar") \
         .getOrCreate()
     
     data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
