@@ -269,9 +269,11 @@ def main():
     # org.apache.spark:spark-streaming-kafka-0-10_2.13:3.3.0
 
     spark = SparkSession.builder \
-        .appName("Input data") \
+        .appName("airflow_spark_job") \
+        .config("spark.driver.memory", "1g") \
+        .config("spark.executor.cores", "1") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:3.3.3") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3") \
         .getOrCreate()
 
     # data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
