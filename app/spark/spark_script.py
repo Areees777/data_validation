@@ -249,52 +249,30 @@ def run(spark: SparkSession) -> None:
 
 
 def main():
-    # jar_packages_url = ','.join([
-    #     'spark-sql-kafka-0-10_2.12-3.3.0.jar, kafka-clients-3.7.0.jar',
-    #     'commons-pool2-2.12.0.jar',
-    #     'spark-token-provider-kafka-0-10_2.12-3.3.0.jar',
-    #     'spark-streaming-kafka-0-10-assembly_2.12-3.3.0.jar'
-    # ])
-
-    # jar_packages_local_path = ','.join([
-    #     '/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.3.0.jar',
-    #     '/opt/bitnami/spark/jars/kafka-clients-3.7.0.jar',
-    #     '/opt/bitnami/spark/jars/commons-pool2-2.12.0.jar',
-    #     '/opt/bitnami/spark/jars/spark-token-provider-kafka-0-10_2.12-3.3.0.jar',
-    #     '/opt/bitnami/spark/jars/spark-streaming-kafka-0-10-assembly_2.12-3.3.0.jar'
-    # ])
-
-    # .config("spark.jars", "spark-sql-kafka-0-10_2.12-3.5.3.jar") \
-    # hdfs://hadoop:9000/jars/spark-sql-kafka-0-10_2.12-3.3.0.jar
-    # org.apache.spark:spark-sql-kafka-0-10_2.13:3.3.3
-    # org.apache.spark:spark-streaming-kafka-0-10_2.13:3.3.0
-
     spark = SparkSession.builder \
         .appName("airflow_spark_job") \
         .config("spark.dynamicAllocation.enabled", "false") \
         .config("spark.executor.memory", "2g") \
         .config("spark.executor.cores", "1") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3,org.apache.kafka:kafka-clients:3.5.2") \
         .getOrCreate()
 
-    # data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
-    # columns = ["name", "value"]
+    data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
+    columns = ["name", "value"]
 
-    # df = spark.createDataFrame(data, columns)
+    df = spark.createDataFrame(data, columns)
 
-    # KAFKA_URL = "kafka:9092"
-    # TOPIC = "person"
+    KAFKA_URL = "kafka:9092"
+    TOPIC = "person"
 
-    # df.write \
-    #     .format("kafka") \
-    #     .option("kafka.bootstrap.servers", KAFKA_URL) \
-    #     .option("topic", TOPIC) \
-    #     .save()
+    df.write \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", KAFKA_URL) \
+        .option("topic", TOPIC) \
+        .save()
 
-    # print(spark.conf.get("spark.jars"))
-
-    run(spark)
+    # run(spark)
 
 
 if __name__ == "__main__":
