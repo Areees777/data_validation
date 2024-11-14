@@ -46,7 +46,7 @@ EOF
 
 wget https://archive.apache.org/dist/hadoop/core/hadoop-2.8.1/hadoop-2.8.1.tar.gz
 tar -xzvf hadoop-2.8.1.tar.gz
-mv dir /usr/local/hadoop
+mv hadoop-2.8.1 /usr/local/hadoop
 export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_INSTALL=$HADOOP_HOME
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
@@ -122,5 +122,9 @@ Para hacer ls dentro de un docker:
 sudo docker exec -it be2d22b72096 ls /opt/bitnami/spark/jars | grep -i "kafka"
 
 Para subir un archivo local a un path del contenedor
-sudo docker cp spark-sql-kafka-0-10_2.12-3.5.0.jar be2d22b72096:/opt/bitnami/spark/jars
+sudo docker cp spark-sql-kafka-0-10_2.13-3.5.3.jar be2d22b72096:/opt/bitnami/spark/jars
 sudo docker cp kafka-clients-3.9.0.jar be2d22b72096:/opt/bitnami/spark/jars
+
+org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.3
+spark-submit --packages  org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3,org.apache.kafka:kafka-clients:3.5.2 --master spark://192.168.1.138:7077 test.py
+
