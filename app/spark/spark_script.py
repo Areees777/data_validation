@@ -290,7 +290,7 @@ def main():
 
     # print(spark.conf.get("spark.jars"))
 
-    # run(spark)
+    run(spark)
 
 
 if __name__ == "__main__":
