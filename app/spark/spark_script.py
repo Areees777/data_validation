@@ -216,7 +216,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
     for sink in sinks:
         if sink["input"] == "ok_with_date":
             for topic in sink["topics"]:
-                # write_to_kafka(df_valid, topic)
+                write_to_kafka(df_valid, topic)
                 print("Escribir en Kafka")
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
