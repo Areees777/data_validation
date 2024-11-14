@@ -221,8 +221,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, sink["name"]])
-                # write_to_hdfs(df_invalid, file_path, sink["format"], sink["saveMode"])
-                print("Escribir en HDFS")
+                write_to_hdfs(df_invalid, file_path, sink["format"], sink["saveMode"])
 
     return df_valid, df_invalid
 
