@@ -3,7 +3,7 @@ from typing import List
 from pyspark.sql import SparkSession, DataFrame, functions as F
 
 
-HDFS_URL = "hdfs://192.168.1.134:9000"
+HDFS_URL = "hdfs://hadoop:9000"
 KAFKA_URL = "kafka:9092"
 
 PROGRAM_METADATA = {
