@@ -253,21 +253,21 @@ def main():
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .getOrCreate()
 
-    # data = [("Alice", "1"), ("Bob", "2"), ("Charlie", "3")]
-    # columns = ["name", "value"]
+    data = [("Alice", "1"), ("Bob", "2"), ("Charlie", "3")]
+    columns = ["name", "value"]
 
-    # df = spark.createDataFrame(data, columns)
+    df = spark.createDataFrame(data, columns)
 
-    # KAFKA_URL = "kafka:9092"
-    # TOPIC = "person"
+    KAFKA_URL = "kafka:9092"
+    TOPIC = "person"
 
-    # df.write \
-    #     .format("kafka") \
-    #     .option("kafka.bootstrap.servers", KAFKA_URL) \
-    #     .option("topic", TOPIC) \
-    #     .save()
+    df.write \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", KAFKA_URL) \
+        .option("topic", TOPIC) \
+        .save()
 
-    run(spark)
+    # run(spark)
 
 
 if __name__ == "__main__":
