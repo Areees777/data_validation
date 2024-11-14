@@ -1,7 +1,7 @@
 import logging
 from typing import List
 from pyspark.sql import SparkSession, DataFrame, functions as F
-from typing import StringType
+from pyspark.sql import StringType
 
 
 HDFS_URL = "hdfs://hadoop:9000"
