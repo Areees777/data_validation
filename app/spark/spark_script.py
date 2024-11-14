@@ -256,7 +256,7 @@ def main():
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .getOrCreate()
 
-    data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
+    data = [("Alice", "1"), ("Bob", "2"), ("Charlie", "3")]
     columns = ["name", "value"]
 
     df = spark.createDataFrame(data, columns)
