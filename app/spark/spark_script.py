@@ -271,6 +271,11 @@ def main():
 
     spark = SparkSession.builder \
         .appName("airflow_spark_job") \
+        .config("spark.executor.memory", "500M") \
+        .config("spark.executor.cores", "1") \
+        .config("spark.driver.memory", "500m") \
+        .config("spark.driver.cores", "1") \
+        .config("spark.master", "spark://192.168.1.138:7077") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3") \
         .getOrCreate()
