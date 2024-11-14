@@ -1,6 +1,7 @@
 import logging
 from typing import List
 from pyspark.sql import SparkSession, DataFrame, functions as F
+from typing import StringType
 
 
 HDFS_URL = "hdfs://hadoop:9000"
@@ -257,6 +258,11 @@ def main():
     columns = ["name", "value"]
 
     df = spark.createDataFrame(data, columns)
+
+    df_kafka = df.select(
+        F.col("name").cast(StringType()).alias("key"),  # Clave de Kafka (en bytes)
+        F.col("value").cast(StringType()).alias("value")  # Valor de Kafka (en bytes)
+    )
 
     KAFKA_URL = "kafka:9092"
     TOPIC = "person"
