@@ -271,6 +271,7 @@ def main():
 
     spark = SparkSession.builder \
         .appName("airflow_spark_job") \
+        .config("spark.dynamicAllocation.enabled", "false") \
         .config("spark.executor.memory", "500M") \
         .config("spark.executor.cores", "1") \
         .config("spark.driver.memory", "500m") \
