@@ -254,7 +254,6 @@ def main():
         .config("spark.executor.memory", "2g") \
         .config("spark.executor.cores", "1") \
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3,org.apache.kafka:kafka-clients:3.5.2") \
         .getOrCreate()
 
     data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
