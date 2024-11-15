@@ -44,7 +44,10 @@ cat <<EOF > core-site.xml
 </configuration>
 EOF
 
+
 wget https://archive.apache.org/dist/hadoop/core/hadoop-2.8.1/hadoop-2.8.1.tar.gz
+
+sudo docker cp hadoop-2.8.1.tar.gz hadoop:/opt/hadoop-2.8.1.tar.gz
 tar -xzvf hadoop-2.8.1.tar.gz
 mv hadoop-2.8.1 /usr/local/hadoop
 export HADOOP_HOME=/usr/local/hadoop

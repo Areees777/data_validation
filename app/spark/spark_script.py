@@ -220,7 +220,14 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
     for sink in sinks:
         if sink["input"] == "ok_with_date":
             for topic in sink["topics"]:
-                # write_to_kafka(df_valid, topic)
+                struct_kafka = F.struct(
+                    F.col("name"), 
+                    F.col("age"),
+                    F.col("office"))
+                df_valid_kafka = df_valid \
+                    .withColumn("value", F.to_json(struct_kafka)) \
+                    .select("value")                
+                # write_to_kafka(df_valid_kafka, topic)
                 print("Escribir en Kafka")
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
