@@ -269,7 +269,7 @@ def main():
     KAFKA_URL = "kafka:9092"
     TOPIC = "person"
 
-    df.write \
+    df_kafka.write \
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_URL) \
         .option("topic", TOPIC) \
