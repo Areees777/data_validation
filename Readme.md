@@ -2,6 +2,22 @@
 
 Este proyecto implementa un pipeline de validación de datos utilizando PySpark. El objetivo es procesar archivos JSON, realizar validaciones en los datos, aplicar transformaciones, y escribir los resultados en HDFS o Kafka dependiendo de la validez de los registros.
 
+## IMPORTANTE: 
+En el proyecto vamos a encontrar lo siguiente:
+- app: Encontramos la estructura del proyecto
+    - configs: Aquí se encuentran todas las configuraciones que va a usar el programa
+    - dependencias: Librerias que se usan durante la ejecución
+    - spark: Este es el script que se lanza desde airflow. 
+        Por qué hay una carpeta spark y con todo el codigo dentro? 
+        La primera idea era crear un wheel subirlo a HDFS y lanzarlo mediante Spark, 
+        pero no lo he conseguido, aunque era la primera idea que tenia. 
+        De todos modos, para facilitarlo, he creado este script que se lanza directamente
+        desde el contenedor de airflow. 
+    - data: Donde guardé los datos de entrada que usa el proyecto
+    - Resto de ficheros: 
+        - El resto de ficheros son de poetry, y archivos que uso para gestionar el tema de
+        mejores prácticas a la hora de desarrollar, como podría ser PEP8. 
+
 ## Estructura del Proyecto
 
 El proyecto consta de las siguientes funcionalidades principales:
