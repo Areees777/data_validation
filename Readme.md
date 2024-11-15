@@ -13,7 +13,7 @@ En el proyecto vamos a encontrar lo siguiente:
         pero no lo he conseguido, aunque era la primera idea que tenia. 
         De todos modos, para facilitarlo, he creado este script que se lanza directamente
         desde el contenedor de airflow. 
-    - data: Donde guardé los datos de entrada que usa el proyecto
+    - data: DOnde se almacenan los datos de entrada que usa el proyecto
     - Resto de ficheros: 
         - El resto de ficheros son de poetry, y archivos que uso para gestionar el tema de
         mejores prácticas a la hora de desarrollar, como podría ser PEP8. 
