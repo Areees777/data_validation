@@ -257,25 +257,6 @@ def main():
         .config("spark.hadoop.fs.defaultFS", HDFS_URL) \
         .getOrCreate()
 
-    # data = [("Alice", "1"), ("Bob", "2"), ("Charlie", "3")]
-    # columns = ["name", "value"]
-
-    # df = spark.createDataFrame(data, columns)
-
-    # df_kafka = df.select(
-    #     F.col("name").cast(StringType()).alias("key"),  # Clave de Kafka (en bytes)
-    #     F.col("value").cast(StringType()).alias("value")  # Valor de Kafka (en bytes)
-    # )
-
-    # KAFKA_URL = "kafka:9092"
-    # TOPIC = "person"
-
-    # df_kafka.write \
-    #     .format("kafka") \
-    #     .option("kafka.bootstrap.servers", KAFKA_URL) \
-    #     .option("topic", TOPIC) \
-    #     .save()
-
     run(spark)
 
 
