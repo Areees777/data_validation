@@ -5,6 +5,7 @@ from pyspark.sql import SparkSession, DataFrame, functions as F
 from pyspark.sql.types import StringType
 
 os.environ["PYSPARK_PYTHON"]="/usr/bin/python3"
+os.environ["PYSPARK_DRIVER_PYTHON"]="/usr/bin/python3"
 
 HDFS_URL = "hdfs://hadoop:9000"
 KAFKA_URL = "kafka:9092"
