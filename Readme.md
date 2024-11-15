@@ -49,7 +49,9 @@ export PYSPARK_DRIVER_PYTHON=python3
 ```
 
 ### 2. Ejecución
+```bash
 python main.py
+```
 
 ### 3. Entrada y salida de datos
 Entrada: Los datos de entrada deben estar en formato JSONL y ubicarse en /data/input/events/person/.
@@ -61,19 +63,27 @@ Registros inválidos: Se escriben en /data/output/discards/person/ en HDFS.
 ## Funcionalidad
 ### 1. Validación de Campos
 Aplica las reglas de validación a los datos y los divide en registros válidos e inválidos.
+```bash
 apply_validations(df: DataFrame, validations: dict) -> (DataFrame, DataFrame)
+```
 
 ### 2. Adición de Campos
 Agrega campos adicionales al DataFrame.
+```bash
 add_fields(df: DataFrame, field_name: str, function: str) -> DataFrame
+```
 
 ### 3. Escritura en HDFS
 Escribe datos en HDFS.
+```bash
 write_to_hdfs(df: DataFrame, file_path: str, file_format: str, file_save_mode: str)
+```
 
 ### 4. Escritura en Kafka
 Envía datos a un tópico de Kafka.
+```bash
 write_to_kafka(df: DataFrame, topic: str)
+```
 
 ## Metadatos del Programa
 El flujo de datos está definido en PROGRAM_METADATA, que especifica las fuentes, transformaciones y sinks.
