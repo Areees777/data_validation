@@ -106,7 +106,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
         if trnsf["name"] == "validation":
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
-            df_valid = apply_validations(df, validations)
+            df_valid, df_invalid = apply_validations(df, validations)
             # This could be replace by left_anti join by any PK, but
             # we don't have on this data sample.
             df_invalid = df.subtract(df_valid)
@@ -117,7 +117,14 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
     for sink in sinks:
         if sink["input"] == "ok_with_date":
             for topic in sink["topics"]:
-                write_to_kafka(df_valid, topic)
+                struct_kafka = F.struct(
+                    F.col("name"), 
+                    F.col("age"),
+                    F.col("office"))
+                df_valid_kafka = df_valid \
+                    .withColumn("value", F.to_json(struct_kafka)) \
+                    .select("value")                
+                # write_to_kafka(df_valid_kafka, topic)
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, sink["name"]])
