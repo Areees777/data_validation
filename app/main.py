@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Tuple
 from pyspark.sql import SparkSession, DataFrame, functions as F
 from dependencies.spark_wrapper import SparkWrapper
 from configs.settings import (
@@ -12,7 +12,7 @@ from configs.settings import (
 from dependencies.io import write_to_hdfs, write_to_kafka
 
 
-def apply_validations(df: DataFrame, validations: dict) -> DataFrame:
+def apply_validations(df: DataFrame, validations: dict) -> Tuple[DataFrame, DataFrame]:
     """
     Applies validation rules to specified fields in a DataFrame and categorizes records as valid or invalid 
     based on validation outcomes.
@@ -107,9 +107,11 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             logging.info(f"Starting with {trnsf['name']} step...")
             validations = trnsf["params"]["validations"]
             df_valid, df_invalid = apply_validations(df, validations)
+            df_valid.show(truncate=False)
+            df_invalid.show(truncate=False)
             # This could be replace by left_anti join by any PK, but
             # we don't have on this data sample.
-            df_invalid = df.subtract(df_valid)
+            # df_invalid = df.subtract(df_valid)
         elif trnsf["name"] == "ok_with_date":
             for field in trnsf["params"]["addFields"]:
                 df_valid = add_fields(df_valid, field["name"], field["function"])
@@ -125,12 +127,11 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
                     .withColumn("value", F.to_json(struct_kafka)) \
                     .select("value")                
                 # write_to_kafka(df_valid_kafka, topic)
+                print("Escribir en Kafka")
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, sink["name"]])
                 write_to_hdfs(df_invalid, file_path, sink["format"], sink["saveMode"])
-
-    return df_valid, df_invalid
 
 
 def run(spark: SparkSession) -> None:

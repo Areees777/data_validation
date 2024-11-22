@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import List
+from typing import List, Tuple
 from pyspark.sql import SparkSession, DataFrame, functions as F
 from pyspark.sql.types import StringType
 
@@ -233,8 +233,6 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
             for path in sink["paths"]:
                 file_path = "".join([HDFS_URL, path, sink["name"]])
                 write_to_hdfs(df_invalid, file_path, sink["format"], sink["saveMode"])
-
-    return df_valid, df_invalid
 
 
 def run(spark: SparkSession) -> None:
