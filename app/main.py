@@ -6,7 +6,8 @@ from configs.settings import (
     SPARK_CONF,
     SPARK_JAR_PACKAGES,
     HDFS_URL,
-    PROGRAM_METADATA
+    PROGRAM_METADATA,
+    KAFKA_URL
 )
 
 from dependencies.io import write_to_hdfs, write_to_kafka
@@ -126,7 +127,7 @@ def data_validation(df: DataFrame, transformations: List[dict], sinks: List[dict
                 df_valid_kafka = df_valid \
                     .withColumn("value", F.to_json(struct_kafka)) \
                     .select("value")                
-                # write_to_kafka(df_valid_kafka, topic)
+                # write_to_kafka(df_valid_kafka, topic, KAFKA_URL)
                 print("Escribir en Kafka")
         elif sink["input"] == "validation_ko":
             for path in sink["paths"]:
